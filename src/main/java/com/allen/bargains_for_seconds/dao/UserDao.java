@@ -1,18 +1,18 @@
 package com.allen.bargains_for_seconds.dao;
 
 import com.allen.bargains_for_seconds.domain.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserDao {
 
     @Select("select * from user where id = #{id}")
-    User getUserById(@Param("id") int id);
+    public User getById(@Param("id") long id);
 
-    @Insert("insert into user(id,name) values(#{id},#{name})")
-    int insert(User user);
+    @Update("update user set password=#{password} where id=#{id}")
+    public void update(User toBeUpdate);
+
+    @Insert("insert into user(id,password,salt,register_date)value(#{id},#{password},#{salt},#{registerDate})")
+    public void createAccount(User user);
 
 }

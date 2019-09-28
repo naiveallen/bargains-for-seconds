@@ -39,23 +39,10 @@ public class SampleController {
     }
 
 
-    @GetMapping("/user/tx")
-    public Result<Boolean> tx() {
-        boolean tx = userService.tx();
-        return Result.success(tx);
-    }
-
     @GetMapping("/redis/get")
     public Result<User> get() {
         User user = redisService.get(UserKey.getById, ""+1 , User.class);
         return Result.success(user);
-    }
-
-    @GetMapping("/redis/set")
-    public Result<Boolean> set() {
-        User user = new User(1, "allen");
-        Boolean res = redisService.set(UserKey.getById, ""+1, user);
-        return Result.success(res);
     }
 
 
