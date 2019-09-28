@@ -1,6 +1,8 @@
 package com.allen.bargains_for_seconds.controller;
 
 import com.allen.bargains_for_seconds.domain.User;
+import com.allen.bargains_for_seconds.redis.RedisService;
+import com.allen.bargains_for_seconds.redis.UserKey;
 import com.allen.bargains_for_seconds.result.CodeMsg;
 import com.allen.bargains_for_seconds.result.Result;
 import com.allen.bargains_for_seconds.service.UserService;
@@ -13,6 +15,9 @@ public class SampleController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RedisService redisService;
 
 
     @GetMapping("/hello")
@@ -38,6 +43,19 @@ public class SampleController {
     public Result<Boolean> tx() {
         boolean tx = userService.tx();
         return Result.success(tx);
+    }
+
+    @GetMapping("/redis/get")
+    public Result<User> get() {
+        User user = redisService.get(UserKey.getById, ""+1 , User.class);
+        return Result.success(user);
+    }
+
+    @GetMapping("/redis/set")
+    public Result<Boolean> set() {
+        User user = new User(1, "allen");
+        Boolean res = redisService.set(UserKey.getById, ""+1, user);
+        return Result.success(res);
     }
 
 
