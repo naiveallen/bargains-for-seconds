@@ -46,4 +46,9 @@ public class SampleController {
     }
 
 
+    @GetMapping("/userInfo")
+    public Result<User> get(User user) {
+        return Result.success(user);
+    }
+
 }

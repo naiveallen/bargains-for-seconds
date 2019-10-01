@@ -44,6 +44,10 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
 	private String getCookieValue(HttpServletRequest request, String cookiName) {
 		Cookie[] cookies = request.getCookies();
+		// 解决压测中的NullPointer问题
+		if (cookies == null || cookies.length <= 0) {
+			return null;
+		}
 		for(Cookie cookie : cookies) {
 			if(cookie.getName().equals(cookiName)) {
 				return cookie.getValue();

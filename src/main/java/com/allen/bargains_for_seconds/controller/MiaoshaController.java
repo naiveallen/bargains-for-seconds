@@ -28,6 +28,11 @@ public class MiaoshaController {
     @Autowired
     MiaoshaService miaoshaService;
 
+
+    // 1176  5000线程 * 10次请求
+    // 秒杀后  商品表中的库存 会出现负数  -102 （10000商品数量  50000请求）
+
+
     @PostMapping("/miaosha")
     public String miaosha(Model model,
                           RedirectAttributes attributes,
@@ -45,11 +50,11 @@ public class MiaoshaController {
             return "miaosha_fail";
         }
         // 判断是否已经秒杀到了
-        MiaoshaOrder miaoshaOrder = orderService.getMiaoshaOrderByUserIdGoodsId(user.getId(), goodsId);
-        if (miaoshaOrder != null) {
-            model.addAttribute("msg", CodeMsg.REPEATE_MIAOSHA.getMsg());
-            return "miaosha_fail";
-        }
+//        MiaoshaOrder miaoshaOrder = orderService.getMiaoshaOrderByUserIdGoodsId(user.getId(), goodsId);
+//        if (miaoshaOrder != null) {
+//            model.addAttribute("msg", CodeMsg.REPEATE_MIAOSHA.getMsg());
+//            return "miaosha_fail";
+//        }
 
         OrderInfo orderInfo = miaoshaService.miaosha(user, good);
         model.addAttribute("orderInfo", orderInfo);
