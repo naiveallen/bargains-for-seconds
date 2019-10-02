@@ -3,6 +3,7 @@ package com.allen.bargains_for_seconds.service;
 import com.allen.bargains_for_seconds.dao.UserDao;
 import com.allen.bargains_for_seconds.domain.User;
 import com.allen.bargains_for_seconds.exception.GlobalException;
+import com.allen.bargains_for_seconds.redis.KeyPrefix;
 import com.allen.bargains_for_seconds.redis.RedisService;
 import com.allen.bargains_for_seconds.redis.UserKey;
 import com.allen.bargains_for_seconds.result.CodeMsg;
@@ -29,7 +30,19 @@ public class UserService {
     RedisService redisService;
 
     public User getById(long id) {
-        return userDao.getById(id);
+
+        // 取缓存
+        User user = redisService.get(UserKey.getById, "" + id, User.class);
+        if (user != null) {
+            return user;
+        }
+
+        // 查数据库 存缓存
+        user = userDao.getById(id);
+        if (user != null) {
+            redisService.set(UserKey.getById, ""+id, user);
+        }
+        return user;
     }
 
 
