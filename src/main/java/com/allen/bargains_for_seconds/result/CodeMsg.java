@@ -10,6 +10,7 @@ public class CodeMsg {
     public static CodeMsg BIND_ERROR = new CodeMsg(500101, "参数校验异常：%s");
     public static CodeMsg REQUEST_ILLIEGAL = new CodeMsg(500102, "请求非法");
     public static CodeMsg ACCESS_LIMIT_REACHED = new CodeMsg(500103, "访问太频繁");
+    public static CodeMsg NOT_LOGIN = new CodeMsg(500105, "用户未登录");
     //注册模块 5001XX
     public static CodeMsg MOBILE_EXIST = new CodeMsg(500104, "手机号已注册");
     //登录模块 5002XX

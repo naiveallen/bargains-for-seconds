@@ -3,7 +3,10 @@ package com.allen.bargains_for_seconds.controller;
 import com.allen.bargains_for_seconds.domain.User;
 import com.allen.bargains_for_seconds.redis.GoodsKey;
 import com.allen.bargains_for_seconds.redis.RedisService;
+import com.allen.bargains_for_seconds.result.CodeMsg;
+import com.allen.bargains_for_seconds.result.Result;
 import com.allen.bargains_for_seconds.service.GoodsService;
+import com.allen.bargains_for_seconds.vo.GoodsDetailVo;
 import com.allen.bargains_for_seconds.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -116,6 +119,45 @@ public class GoodsController {
             redisService.set(GoodsKey.getGoodsDetail,""+id, html);  //保存到缓存，有效期1分钟
         }
         return html;
+
+    }
+
+
+    @GetMapping(value = "/goods2/{id}")
+    @ResponseBody
+    public Result<GoodsDetailVo> details2(Model model,
+                                          User user,
+                                          @PathVariable("id") Long id) {
+        if (user == null) {
+            return Result.error(CodeMsg.NOT_LOGIN);
+        }
+
+        GoodsVo goods = goodsService.getGoodsVoByGoodsId(id);
+
+        long startAt = goods.getStartDate().getTime();
+        long endAt = goods.getEndDate().getTime();
+        long now = System.currentTimeMillis();
+
+        int miaoshaStatus = 0;
+        int remainSeconds = 0;
+        if(now < startAt ) {//秒杀还没开始，倒计时
+            miaoshaStatus = 0;
+            remainSeconds = (int)((startAt - now )/1000);
+        }else  if(now > endAt){//秒杀已经结束
+            miaoshaStatus = 2;
+            remainSeconds = -1;
+        }else {//秒杀进行中
+            miaoshaStatus = 1;
+            remainSeconds = 0;
+        }
+
+        GoodsDetailVo goodsDetailVo = new GoodsDetailVo();
+
+        goodsDetailVo.setGoods(goods);
+        goodsDetailVo.setUser(user);
+        goodsDetailVo.setRemainSeconds(remainSeconds);
+        goodsDetailVo.setMiaoshaStatus(miaoshaStatus);
+        return Result.success(goodsDetailVo);
 
     }
 
