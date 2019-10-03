@@ -1,6 +1,7 @@
 package com.allen.bargains_for_seconds.controller;
 
 import com.allen.bargains_for_seconds.domain.User;
+import com.allen.bargains_for_seconds.rabbitmq.MQSender;
 import com.allen.bargains_for_seconds.redis.RedisService;
 import com.allen.bargains_for_seconds.redis.UserKey;
 import com.allen.bargains_for_seconds.result.CodeMsg;
@@ -18,6 +19,9 @@ public class SampleController {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    MQSender mqSender;
 
 
     @GetMapping("/hello")
@@ -49,6 +53,13 @@ public class SampleController {
     @GetMapping("/userInfo")
     public Result<User> get(User user) {
         return Result.success(user);
+    }
+
+    @GetMapping("/mq")
+    @ResponseBody
+    public Result<String> mq() {
+        mqSender.send("Hello MQ!!!");
+        return Result.success("success");
     }
 
 }
