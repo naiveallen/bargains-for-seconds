@@ -6,6 +6,7 @@ import com.allen.bargains_for_seconds.domain.User;
 public class MiaoshaMessage {
 	private User user;
 	private long goodsId;
+
 	public User getUser() {
 		return user;
 	}
