@@ -63,9 +63,9 @@
         	</form>-->
         	<div class="row">
         		<div class="form-inline">
-		        	<!--<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>-->
-		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
-		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="doMiaosha()">立即秒杀</button>
+		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+		        	<input id="verifyCode"  class="form-control" style="display:none"/>
+		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getMiaoshaPath()">立即秒杀</button>
         		</div>
         	</div>
         	<input type="hidden" name="goodsId"  id="goodsId" />
@@ -88,29 +88,29 @@
 </body>
 <script>
 
-// function getMiaoshaPath(){
-// 	var goodsId = $("#goodsId").val();
-// 	g_showLoading();
-// 	$.ajax({
-// 		url:"/miaosha/path",
-// 		type:"GET",
-// 		data:{
-// 			goodsId:goodsId,
-// 			verifyCode:$("#verifyCode").val()
-// 		},
-// 		success:function(data){
-// 			if(data.code == 0){
-// 				var path = data.data;
-// 				doMiaosha(path);
-// 			}else{
-// 				layer.msg(data.msg);
-// 			}
-// 		},
-// 		error:function(){
-// 			layer.msg("客户端请求有误");
-// 		}
-// 	});
-// }
+function getMiaoshaPath(){
+	var goodsId = $("#goodsId").val();
+	g_showLoading();
+	$.ajax({
+		url:"/miaosha/path",
+		type:"GET",
+		data:{
+			goodsId:goodsId,
+			verifyCode:$("#verifyCode").val()
+		},
+		success:function(data){
+			if(data.code == 0){
+				var path = data.data;
+				doMiaosha(path);
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("客户端请求有误");
+		}
+	});
+}
 
 function getMiaoshaResult(goodsId){
 	g_showLoading();
@@ -148,9 +148,9 @@ function getMiaoshaResult(goodsId){
 	});
 }
 
-function doMiaosha(){
+function doMiaosha(path){
 	$.ajax({
-		url:"/miaosha",
+		url:"/"+path+"/miaosha",
 		type:"POST",
 		data:{
 			goodsId:$("#goodsId").val()
@@ -239,8 +239,11 @@ function countDown(){
 		$("#verifyCode").hide();
 	}
 }
-// function refreshVerifyCode(){
-// 	$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
-// }
+
+function refreshVerifyCode(){
+	$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
+}
+
+
 </script>
 </html>
